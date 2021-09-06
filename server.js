@@ -2,6 +2,9 @@ const express = require("express");
  const path = require("path");
 
  const controller = require("./controllers");
+ //handlebars
+ const exphbs = require("express-handlebars");
+
  //initialize the server
  const app = express();
  const PORT = process.env.PORT || 3001;
@@ -11,5 +14,10 @@ const express = require("express");
  app.use(express.static(path.join(__dirname, "public")));
 
  app.use("/", controller);
+
+ //set handlebars as render engine
+ app.engine("handlebars", exphbs());
+ app.set("view engine", "handlebars");
+
 
  app.listen(PORT, () => console.log(`Now listening on port ${PORT}`));
