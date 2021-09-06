@@ -45,9 +45,9 @@ const { User, Post, Comment } = require("../../models");
  //add post
  router.post("/", (req, res) => {
     Post.create({
-        title: "This is a new post",
-        body: " This is the text that goes into the body",
-        user_id: "1",
+        title: req.body.title,
+        body: req.body.body,
+        user_id: req.body.user_id,
       })
         .then((dbPostData) => {
           res.json(dbPostData);
