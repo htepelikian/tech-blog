@@ -5,7 +5,19 @@ const { User, Post, Comment } = require("../../models");
  //get all the users
  router.get("/", (req, res) => {
     User.findAll({
-        attributes: ["id", "username", "email", "password"],
+        attributes: ["id", "username", "email", "password"], 
+        include: [
+          {
+            model: Post,
+            as: "posts",
+            attributes: ["id", "title", "body"],
+          },
+          {
+            model: Comment,
+            as: "comments",
+            attributes: ["id", "comment_text", "post_id"],
+          },
+        ],
       }) 
         .then((dbUserData) => {
           res.json(dbUserData);
@@ -18,16 +30,24 @@ const { User, Post, Comment } = require("../../models");
 
  //get user by id
  router.get("/:id", (req, res) => {
-    User.findOne(
-        {
-          where: {
-            id: req.params.id,
-          },
+    User.findOne({
+        where: {
+          id: req.params.id,
         },
-        {
-          attributes: ["id", "username", "email", "password"], 
-        }
-      ) 
+        attributes: ["id", "username", "email", "password"], 
+        include: [
+          {
+            model: Post,
+            as: "posts",
+            attributes: ["id", "title", "body"],
+          },
+          {
+            model: Comment,
+            as: "comments",
+            attributes: ["id", "comment_text", "post_id"],
+          },
+        ],
+      })
         .then((dbUserData) => {
           if (!dbUserData) {
             res.status(404).json({ message: "No User found with this id" });
