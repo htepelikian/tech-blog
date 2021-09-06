@@ -1,0 +1,12 @@
+<div class="card single-post-padding">
+     <h1 class="post-header">{{post.title}} </h1>
+     <h4>Posted by {{post.user.username}} on 9/1/2021</h4>
+     <div class="container">
+         <p class="post-text post-text-padding">{{post.body}}</p>
+     </div>
+ </div>
+
+ {{#each post.comments as |aComment|}}
+ {{> comment aComment}}
+ {{/each}}
+ <link rel="stylesheet" href="/css/single-post.css"> 
