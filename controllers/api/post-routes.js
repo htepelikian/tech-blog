@@ -1,25 +1,83 @@
 const router = require("express").Router();
 
+const { User, Post, Comment } = require("../../models");
+
  //get all the posts
  router.get("/", (req, res) => {
-   res.send("GET ALL postS");
+    Post.findAll({
+        attributes: ["id", "title", "body", "user_id"],
+      })
+        .then((dbPostData) => {
+          res.json(dbPostData);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
  });
 
  //get post by id
  router.get("/:id", (req, res) => {
-   res.send(`GET post WHERE id is ${req.params.id}`);
+    Post.findOne(
+        {
+          where: {
+            id: req.params.id,
+          },
+        },
+        {
+          attributes: ["id", "title", "body", "user_id"], //remove password in the futrue
+        }
+      ) //include the posts and comments of this user
+        .then((dbPostData) => {
+          if (!dbPostData) {
+            res.status(404).json({ message: "No Post found with this id" });
+            return;
+          }
+          res.json(dbPostData);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err);
+        });
+
  });
 
  //add post
  router.post("/", (req, res) => {
-   res.send(`ADD post`);
+    Post.create({
+        title: "This is a new post",
+        body: " This is the text that goes into the body",
+        user_id: "1",
+      })
+        .then((dbPostData) => {
+          res.json(dbPostData);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).json(err); //REST api needs status
+        });
+
  });
  //update post
- router.put("/", (req, res) => {
-   res.send(`update post`);
+
  });
  //remove post
- router.delete("/", (req, res) => {
-   res.send(`delete post`);
+ router.delete("/:id", (req, res) => {
+    Post.destroy({
+      where: {
+        id: req.params.id,
+      },
+    })
+      .then((dbPostData) => {
+        if (!dbPostData) {
+          res.status(404).json({ message: "No Post found with this id" });
+          return;
+        }
+        res.json(dbPostData);
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
  });
  module.exports = router;
