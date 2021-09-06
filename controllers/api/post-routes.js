@@ -30,10 +30,15 @@ const { User, Post, Comment } = require("../../models");
           id: req.params.id,
           },
         },
-        {
-          attributes: ["id", "title", "body", "user_id"], 
-        }
-      ) 
+        attributes: ["id", "title", "body", "user_id"],
+        include: [
+          {
+            model: Comment,
+            as: "comments",
+            attributes: ["id", "comment_text", "user_id"],
+          },
+        ],
+      })
         .then((dbPostData) => {
           if (!dbPostData) {
             res.status(404).json({ message: "No Post found with this id" });
