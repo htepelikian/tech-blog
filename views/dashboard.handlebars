@@ -1,7 +1,4 @@
 <h1 class="padding-20">My Posts</h1>
- {{> post}}
- {{> post}}
- {{> post}}
- {{> post}}
- {{> post}}
- {{> post}} 
+{{#each posts as |aPost| }}
+ {{> post aPost}}
+ {{/each}} 
